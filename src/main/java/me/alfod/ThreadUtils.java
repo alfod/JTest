@@ -12,23 +12,23 @@ import java.util.concurrent.CountDownLatch;
 public class ThreadUtils {
     private final Integer count = 10_000;
 
-    public static void run(Runnable runnable, int count, double interval) {
+    public static void run(Runnable runnable, int times, double interval) {
         if (runnable == null) {
             throw new RuntimeException("runnable is null");
         }
-        if (count < 1) {
-            count = 1;
+        if (times < 1) {
+            times = 1;
         }
 
-        Thread[] threads = new Thread[count];
+        Thread[] threads = new Thread[times];
         InnerRunnable innerRunnable;
-        CountDownLatch remainThread = new CountDownLatch(count);
-        CountDownLatch successNumber = new CountDownLatch(count);
-        for (int i = 0; i < count; i++) {
+        CountDownLatch remainThread = new CountDownLatch(times);
+        CountDownLatch successNumber = new CountDownLatch(times);
+        for (int i = 0; i < times; i++) {
             innerRunnable = new InnerRunnable(remainThread, successNumber, runnable);
             threads[i] = new Thread(innerRunnable);
         }
-        for (int i = 0; i < count; i++) {
+        for (int i = 0; i < times; i++) {
             print("thread  " + i + " run ");
             threads[i].start();
         }
@@ -38,12 +38,12 @@ public class ThreadUtils {
             e.printStackTrace();
         }
 
-        long failed = (count - successNumber.getCount());
+        long failed = (times - successNumber.getCount());
         long success = successNumber.getCount();
 
         print("failed: " + failed);
         print("success: " + success);
-        print("rate: " + (double) success / count);
+        print("rate: " + (double) success / times);
 
     }
 
