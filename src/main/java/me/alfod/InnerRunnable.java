@@ -12,11 +12,11 @@ import java.util.concurrent.CountDownLatch;
 class InnerRunnable implements Runnable {
 
     /**
-     * 剩余待执行的线程
+     * 剩余待执行的线程数量
      */
     private final CountDownLatch remainThreadCount;
     /**
-     * 方法是否执行成功
+     * 执行成功的线程数量
      */
     private final CountDownLatch successNumber;
 
