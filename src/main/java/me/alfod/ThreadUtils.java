@@ -1,6 +1,8 @@
 package me.alfod;
 
+import java.text.DecimalFormat;
 import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.CyclicBarrier;
 
 /**
  * @author Yang Dong
@@ -24,12 +26,12 @@ public class ThreadUtils {
         InnerRunnable innerRunnable;
         CountDownLatch remainThread = new CountDownLatch(times);
         CountDownLatch successNumber = new CountDownLatch(times);
+        CyclicBarrier synchro = new CyclicBarrier(times);
         for (int i = 0; i < times; i++) {
-            innerRunnable = new InnerRunnable(remainThread, successNumber, runnable);
-            threads[i] = new Thread(innerRunnable);
+            innerRunnable = new InnerRunnable(remainThread, successNumber, runnable, synchro);
+            threads[i] = new Thread(innerRunnable, "thread-" + i);
         }
         for (int i = 0; i < times; i++) {
-            print("thread  " + i + " run ");
             threads[i].start();
         }
         try {
@@ -38,16 +40,22 @@ public class ThreadUtils {
             e.printStackTrace();
         }
 
+        print();
         long failed = (times - successNumber.getCount());
         long success = successNumber.getCount();
-
+        double rate = (double) success / times;
         print("failed: " + failed);
         print("success: " + success);
-        print("rate: " + (double) success / times);
+        print("rate: " + new DecimalFormat("#.00%").format(rate));
 
+        print();
     }
 
     private static void print(Object o) {
         System.out.println(o);
+    }
+
+    private static void print() {
+        System.out.println();
     }
 }

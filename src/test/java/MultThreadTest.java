@@ -14,10 +14,12 @@ public class MultThreadTest {
         ThreadUtils.run(new Runnable() {
             @Override
             public void run() {
-                if (Math.random() > 0.4555) {
-                    throw new RuntimeException("failed");
+                try {
+                    Thread.sleep(1000);
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
-                System.out.println("test " + Math.random());
+                System.out.println("test " + Thread.currentThread().getName());
             }
         }, 100, 0);
     }

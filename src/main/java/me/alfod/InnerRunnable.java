@@ -1,6 +1,7 @@
 package me.alfod;
 
 import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.CyclicBarrier;
 
 /**
  * @author Yang Dong
@@ -25,19 +26,26 @@ class InnerRunnable implements Runnable {
      */
     private final Runnable runnable;
 
-    public InnerRunnable(CountDownLatch remainThreadCount, CountDownLatch successNumber, Runnable runnable) {
+    /**
+     * 状态同步机, 确保所有线程同时执行, 并发操作
+     */
+    private final CyclicBarrier synchro;
+
+    public InnerRunnable(CountDownLatch remainThreadCount, CountDownLatch successNumber, Runnable runnable, CyclicBarrier synchro) {
         this.remainThreadCount = remainThreadCount;
         this.successNumber = successNumber;
         this.runnable = runnable;
+        this.synchro = synchro;
     }
 
     @Override
     public void run() {
         try {
+            synchro.await();
             runnable.run();
         } catch (Exception e) {
             successNumber.countDown();
-            throw e;
+            throw new RuntimeException(e);
         } finally {
             remainThreadCount.countDown();
         }
