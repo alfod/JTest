@@ -29,19 +29,19 @@ class InnerRunnable implements Runnable {
     /**
      * 状态同步机, 确保所有线程同时执行, 并发操作
      */
-    private final CyclicBarrier synchro;
+    private final CyclicBarrier waitArea;
 
-    public InnerRunnable(CountDownLatch remainThreadCount, CountDownLatch successNumber, Runnable runnable, CyclicBarrier synchro) {
+    public InnerRunnable(CountDownLatch remainThreadCount, CountDownLatch successNumber, Runnable runnable, CyclicBarrier waitArea) {
         this.remainThreadCount = remainThreadCount;
         this.successNumber = successNumber;
         this.runnable = runnable;
-        this.synchro = synchro;
+        this.waitArea = waitArea;
     }
 
     @Override
     public void run() {
         try {
-            synchro.await();
+            waitArea.await();
             runnable.run();
         } catch (Exception e) {
             successNumber.countDown();

@@ -11,16 +11,13 @@ import org.junit.Test;
 public class MultThreadTest {
     @Test
     public void test() {
-        ThreadUtils.run(new Runnable() {
-            @Override
-            public void run() {
+        ThreadUtils.run(() -> {
                 try {
                     Thread.sleep(1000);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
                 System.out.println("test " + Thread.currentThread().getName());
-            }
-        }, 100, 0);
+            }, 100, 0);
     }
 }

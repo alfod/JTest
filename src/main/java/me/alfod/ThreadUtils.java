@@ -26,10 +26,10 @@ public class ThreadUtils {
         InnerRunnable innerRunnable;
         CountDownLatch remainThread = new CountDownLatch(times);
         CountDownLatch successNumber = new CountDownLatch(times);
-        CyclicBarrier synchro = new CyclicBarrier(times);
+        CyclicBarrier waitArea = new CyclicBarrier(times);
         for (int i = 0; i < times; i++) {
-            innerRunnable = new InnerRunnable(remainThread, successNumber, runnable, synchro);
-            threads[i] = new Thread(innerRunnable, "thread-" + i);
+            innerRunnable = new InnerRunnable(remainThread, successNumber, runnable, waitArea);
+            threads[i] = new Thread(innerRunnable, "JTest-thread-" + i);
         }
         for (int i = 0; i < times; i++) {
             threads[i].start();
