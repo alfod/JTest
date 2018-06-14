@@ -1,3 +1,5 @@
+package Thread;
+
 import me.alfod.ThreadUtils;
 import org.junit.Test;
 
